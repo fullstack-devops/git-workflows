@@ -33,7 +33,7 @@ on:
 
 jobs:
   generate_infos:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     outputs:
       pr: ${{ steps.tag.outputs.pr }}
       sha: ${{ steps.tag.outputs.sha }}
