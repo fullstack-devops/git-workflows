@@ -1,0 +1,57 @@
+name: Create release
+
+on:
+  workflow_call:
+    secrets:
+      token:
+        required: true
+    outputs:
+      release-id:
+        description: "returns the pullrequest number"
+        value: ${{ jobs.generate_infos.outputs.release-id }}
+      sha:
+        description: "returns the sha from pull request"
+        value: ${{ jobs.generate_infos.outputs.sha }}
+      repo:
+        description: "returns the repo name"
+        value: ${{ jobs.generate_infos.outputs.repo }}
+      owner:
+        description: "returns the owner"
+        value: ${{ jobs.generate_infos.outputs.owner }}
+      sha-short:
+        description: "returns the short sha from pull request"
+        value: ${{ jobs.generate_infos.outputs.sha-short }}
+      version:
+        description: "returns the version to build"
+        value: ${{ jobs.generate_infos.outputs.version }}
+
+jobs:
+  generate_infos:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.tag.outputs.sha }}
+      repo: ${{ steps.tag.outputs.repo }}
+      owner: ${{ steps.tag.outputs.owner }}
+      version: ${{ steps.tag.outputs.version }}
+      sha-short: ${{ steps.tag.outputs.sha-short }}
+      release-id: ${{ steps.tag.outputs.release-id }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Setup awesome-ci
+        uses: fullstack-devops/awesome-ci-action@main
+
+      - name: create release
+        run: awesome-ci release create -merge-sha ${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
+      - name: export infos
+        id: tag
+        shell: bash
+        run: |
+          echo "::set-output name=version::${ACI_VERSION}"
+          echo "::set-output name=release-id::$ACI_RELEASE_ID"
+          echo "::set-output name=sha::$ACI_PR_SHA"
+          echo "::set-output name=sha-short::$ACI_PR_SHA_SHORT"
+          echo "::set-output name=owner::$ACI_OWNER"
+          echo "::set-output name=repo::$ACI_REPO"
