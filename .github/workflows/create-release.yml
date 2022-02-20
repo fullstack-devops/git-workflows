@@ -6,7 +6,7 @@ on:
       token:
         required: true
     outputs:
-      release-id:
+      releaseid:
         description: "returns the pullrequest number"
         value: ${{ jobs.generate_infos.outputs.release-id }}
       sha:
