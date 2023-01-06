@@ -43,7 +43,7 @@ jobs:
       version: ${{ steps.tag.outputs.version }}
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Setup awesome-ci
