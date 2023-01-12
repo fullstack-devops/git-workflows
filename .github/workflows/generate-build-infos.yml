@@ -30,17 +30,25 @@ on:
       version:
         description: "returns the version to build"
         value: ${{ jobs.generate_infos.outputs.version }}
+      latest-version:
+        description: "returns the version to build"
+        value: ${{ jobs.generate_infos.outputs.latest-version }}
+      next-version:
+        description: "returns the version to build"
+        value: ${{ jobs.generate_infos.outputs.next-version }}
 
 jobs:
   generate_infos:
     runs-on: ubuntu-latest
     outputs:
-      pr: ${{ steps.tag.outputs.pr }}
-      sha: ${{ steps.tag.outputs.sha }}
-      repo: ${{ steps.tag.outputs.repo }}
-      owner: ${{ steps.tag.outputs.owner }}
-      sha-short: ${{ steps.tag.outputs.sha-short }}
-      version: ${{ steps.tag.outputs.version }}
+      pr: ${{ steps.tag.outputs.ACI_PR }}
+      sha: ${{ steps.tag.outputs.ACI_PR_SHA }}
+      repo: ${{ steps.tag.outputs.ACI_REPO }}
+      owner: ${{ steps.tag.outputs.ACI_OWNER }}
+      sha-short: ${{ steps.tag.outputs.ACI_PR_SHA_SHORT }}
+      version: ${{ steps.tag.outputs.ACI_LATEST_VERSION }}-pr-${{ steps.tag.outputs.ACI_PR }}
+      latest-version: ${{ steps.tag.outputs.ACI_LATEST_VERSION }}
+      next-version: ${{ steps.tag.outputs.ACI_NEXT_VERSION }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -50,16 +58,7 @@ jobs:
         uses: fullstack-devops/awesome-ci-action@main
 
       - name: collect infos
-        run: awesome-ci pr info -number ${{ inputs.prnumber }}
+        id: tag
+        run: awesome-ci pr info -n ${{ inputs.prnumber }}
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
-      - name: export infos
-        id: tag
-        shell: bash
-        run: |
-          echo "::set-output name=version::${ACI_VERSION}-PR-${ACI_PR}-${ACI_PR_SHA_SHORT}"
-          echo "::set-output name=pr::$ACI_PR"
-          echo "::set-output name=sha::$ACI_PR_SHA"
-          echo "::set-output name=sha-short::$ACI_PR_SHA_SHORT"
-          echo "::set-output name=owner::$ACI_OWNER"
-          echo "::set-output name=repo::$ACI_REPO"
