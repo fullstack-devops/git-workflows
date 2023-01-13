@@ -47,6 +47,6 @@ jobs:
 
       - name: create release
         id: tag
-        run: awesome-ci release create --merge-sha ${{ github.sha }}
+        run: awesome-ci release create --merge-sha ${{ github.sha }} > $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
