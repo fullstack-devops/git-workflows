@@ -9,6 +9,9 @@ on:
       releaseid:
         description: "returns the pullrequest number"
         value: ${{ jobs.generate_infos.outputs.release-id }}
+      release-id:
+        description: "returns the pullrequest number"
+        value: ${{ jobs.generate_infos.outputs.release-id }}
       sha:
         description: "returns the sha from pull request"
         value: ${{ jobs.generate_infos.outputs.sha }}
