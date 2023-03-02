@@ -27,6 +27,9 @@ on:
       version:
         description: "returns the version to build"
         value: ${{ jobs.generate_infos.outputs.version }}
+      latest-version:
+        description: "returns the last release version"
+        value: ${{ jobs.generate_infos.outputs.latest-version }}
 
 jobs:
   generate_infos:
